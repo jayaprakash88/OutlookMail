@@ -1,0 +1,15 @@
+<h1>My messages</h1>
+<table>
+  <tr>
+    <th>From</th>
+    <th>Subject</th>
+    <th>Received</th>
+  </tr>
+  <% @messages.each do |message| %>
+  <tr>
+    <td><%= message['From']['EmailAddress']['Name'] %></td>
+    <td><%= message['Subject'] %></td>
+    <td><%= message['ReceivedDateTime'] %></td>
+  </tr>
+  <% end %>
+</table>
