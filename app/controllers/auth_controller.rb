@@ -14,6 +14,6 @@ class AuthController < ApplicationController
     token = get_token_from_code params[:code]
   	session[:azure_token] = token.to_hash
   	session[:user_email] = get_user_email token.token
-  	redirect_to contacts_index_url
+  	redirect_to contacts_index_url ###mail_index_url ##contacts_index_url
   end
 end

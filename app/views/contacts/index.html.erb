@@ -1,4 +1,5 @@
 <h1>My contacts</h1>
+<a href='<%=get_login_url%>'>Log in and view my email</a>
 <table>
   <tr>
     <th>First Name</th>
@@ -8,9 +9,9 @@
     <th>JobTitle</th>
     <th>CompanyName</th>
     <th>MobilePhone</th>
+    <th>CompanyPhone</th>
   </tr>
-
-  <% @contacts.each do |contact| %>
+  <% !@contacts.blank? && @contacts.each do |contact| %>
     <tr>
       <td><%= contact['GivenName'] %></td>
       <td><%= contact['Surname'] %></td>
@@ -19,6 +20,7 @@
       <td><%= contact['JobTitle'] %></td>
       <td><%= contact['CompanyName'] %></td>
       <td><%= contact['MobilePhone1'] %></td>
+      <td><%= contact['BusinessPhones'].blank? ? "" : contact['BusinessPhones'].first%></td>
     </tr>
   <% end %>
 </table>
