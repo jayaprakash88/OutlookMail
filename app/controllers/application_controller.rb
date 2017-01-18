@@ -10,5 +10,6 @@ class ApplicationController < ActionController::Base
     # Display the login link.
     login_url = get_login_url
     render html: "<a href='#{login_url}'>Log in and view my email</a>".html_safe
+    #render html: "<a href='#{contacts_new_path}'>Create New Contact</a>".html_safe
   end
 end

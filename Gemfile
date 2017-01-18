@@ -25,6 +25,9 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'oauth2'
 gem 'activerecord-session_store'
 gem 'faraday'
+gem "paperclip", "~> 5.0.0"
+gem 'pry'
+gem "mysql2", '0.4.2', :platforms=>:ruby
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 

@@ -1,0 +1,136 @@
+
+<%= form_for(:contact, :url => {:action => 'create'}, :method => :post) do |f| %>
+    <div class="modal-header padng15p">
+      <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+      <h4 class="modal-title blu-1 txtcapt mrgtp10p"><span class="fnt18">New Contact</span></h4>
+    </div>
+    <div class="modal-body mrgbt25p pdng15p fnt000" style="height:295px;">
+      <div class="col-md-12 padsidenone mrgtp10p mrgbt10p">
+        <div class="col-md-6 padlftnone">
+        <div class="property_row"><label class="padtp5pim">Name<i class="clred">*</i></label>
+          <span><%= f.text_field(:name, class: 'form-control',:required => true) %></span>
+        </div>
+        <div class="property_row"><label class="padtp5pim">Email</label>
+          <span><%= f.text_field(:email, class: 'form-control',:required => true) %></span>
+        </div>
+        <div class="property_row"><label class="padtp5pim">Mobile <i class="fa fa-phone"></i></label>
+          <span><%=  f.text_field(:mobile_no, class: 'form-control') %></span>
+        </div>
+        <div class="property_row"><label class="padtp5pim">Birthday</label>
+          <span><%=  f.text_field(:birthday,class: 'form-control datepicker', style: 'width: 75%;') %></span>
+        </div>
+        <div class="property_row"><label class="padtp5pim" style="width: 30%;">Profile Image</label>
+          <span>
+           <%= hidden_field_tag(:crop_x) %>
+           <%= f.file_field :profile_photo ,:accept => 'image/png,image/gif,image/jpeg',:style=>"height: 26px; padding-top:5px;", :multiple => false %>
+         </span>
+        </div>
+      </div>
+      <div class="col-md-6 padrgtnone">
+        <div class="property_row"><label class="padtp5pim">Office <i class="fa fa-phone"></i></label>
+          <span><%=  f.text_field(:office_no,class: 'form-control') %></span>
+        </div>
+        <div class="property_row"><label class="padtp5pim">Company</label>
+            <span><%=  f.text_field(:company_name, class: 'form-control') %></span>
+        </div>
+        <div class="property_row"><label class="padtp5pim">Job Title</label>
+            <span><%=  f.text_field(:job_title,  class: 'form-control') %></span>
+        </div>
+        <div class=" f.text_field"><label class="padtp5pim">Company Address</label>
+           <span><%= f.text_field(:company_address,  class: 'form-control') %></span>
+        </div>
+        <div class="property_row"><label class="padtp5pim">Office Hours</label>
+            <span><%=  f.text_field(:office_hour,  class: 'form-control') %></span>
+        </div>       
+      </div>
+    </div>
+    <div class="col-md-12 text-center">
+      <button class="orngbtn fnt13 txtcapt mrgtp10p">Submit</button>
+    </div>
+  </div>
+
+<%end%>
+<div class="modal fade" id="cropModal"  role="dialog" >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" id="cropModalClose" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Crop Image</h4>
+            </div>
+            <div class="modal-body">
+                <div id="crop_views" style='width:100%; height:100%;float:left;'></div>
+                <img id="upload-demo" src="#" alt="your image" style="display: none !important"/>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="save_original_image">Use Original Image</button>
+                <button type="button" class="btn btn-primary" id="save_crop_image">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+  var file;
+  $("#contact_profile_photo").change(function () {
+      $('#cropModal').modal('show');
+      $('#crop_x').val("");
+      file = this;
+  });
+  $('#cropModal').on('shown.bs.modal', function (e) {
+      $('#newevent').modal('hide');
+      readFile(file);
+  })
+
+
+  function readFile(input) {
+      if (input.files && input.files[0]) {
+          var reader = new FileReader();
+
+          reader.onload = function (e) {
+              $('.upload-demo').addClass('ready');
+              $uploadCrop.croppie('bind', {
+                  url: e.target.result
+              }).then(function () {
+                  console.log('jQuery bind complete');
+              });
+
+          }
+
+          reader.readAsDataURL(input.files[0]);
+      }
+  }
+
+  $uploadCrop = $('#upload-demo').croppie({
+      viewport: {
+          width: 200,
+          height: 200
+      },
+      boundary: {
+          width: 300,
+          height: 300
+      }
+  });
+
+
+  $("#save_crop_image").on('click', function (ev) {
+      $uploadCrop.croppie('result', {
+          type: 'canvas',
+          size: 'original'
+      }).then(function (resp) {
+          $('#cropModal').modal('hide');
+          $('#crop_x').val(resp);
+
+
+      });
+  });
+
+  $("#cropModalClose").on('click', function (ev) {
+      $('#cropModal').modal('hide');
+      $('#newevent').modal('show');
+  });
+
+  $("#save_original_image").on('click', function (ev) {
+      $('#cropModal').modal('hide');
+      $('#newevent').modal('show');
+  });
+</script>

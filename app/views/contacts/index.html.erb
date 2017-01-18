@@ -1,26 +1,29 @@
 <h1>My contacts</h1>
-<a href='<%=get_login_url%>'>Log in and view my email</a>
+<a href='<%=get_login_url%>'>Log in and view my email</a>&nbsp;&nbsp;
+<a href='<%=contacts_new_path%>'>Create Contact</a>
 <table>
   <tr>
     <th>First Name</th>
-    <th>Last Name</th>
     <th>Email</th>
     <th>Birthday</th>
     <th>JobTitle</th>
     <th>CompanyName</th>
     <th>MobilePhone</th>
     <th>CompanyPhone</th>
+    <th>OfficeHours</th>
+    <th>CompantAddress</th>
   </tr>
   <% !@contacts.blank? && @contacts.each do |contact| %>
     <tr>
-      <td><%= contact['GivenName'] %></td>
-      <td><%= contact['Surname'] %></td>
-      <td><%= contact['EmailAddresses'][0]['Address'] rescue "" %></td>
-      <td><%= contact['Birthday'] %></td>
-      <td><%= contact['JobTitle'] %></td>
-      <td><%= contact['CompanyName'] %></td>
-      <td><%= contact['MobilePhone1'] %></td>
-      <td><%= contact['BusinessPhones'].blank? ? "" : contact['BusinessPhones'].first%></td>
+      <td><%= contact.name %></td>
+      <td><%= contact.email %></td>
+      <td><%= contact.birthday %></td>
+      <td><%= contact.job_title %></td>
+      <td><%= contact.company_name %></td>
+      <td><%= contact.mobile_no %></td>
+      <td><%= contact.office_no%></td>
+      <td><%= contact.office_hour%></td>
+      <td><%= contact.company_address%></td>
     </tr>
   <% end %>
 </table>

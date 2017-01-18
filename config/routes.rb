@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
   get 'contacts/index'
+  get 'contacts/new'
+  post 'contacts/create'
+  #post 'contacts/outlook_contact_create'
 
   get 'calendar/index'
 
@@ -10,8 +13,11 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
-  root 'application#home'
-  get 'authorize' => 'auth#gettoken'
+  #root 'application#home'
+  root 'contacts#index'
+  ##get 'authorize' => 'contacts#gettoken'
+  get 'authorize' => 'contacts#gettoken'  
+  #get 'authorize' => 'auth#gettoken'
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
