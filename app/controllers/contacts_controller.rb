@@ -10,13 +10,16 @@ class ContactsController < ApplicationController
   end
 
   def create
-  
     if params[:contact][:profile_photo].present? && params[:crop_x].present?
        image = Paperclip.io_adapters.for(params[:crop_x])
        image.original_filename = params[:contact][:profile_photo].original_filename
        params[:contact][:profile_photo] = image
     end
     @contact = Contact.create(contact_params)
+    if @contact.present? && params[:contact][:jcrop_profile_photo].present?
+     # @contact.update_attributes(:jcrop_profile_photo => params[:contact][:jcrop_profile_photo])
+      @contact.reprocess_avatar if @contact.cropping?
+    end
     redirect_to contacts_index_path
   end
 
