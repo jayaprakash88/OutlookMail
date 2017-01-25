@@ -1,0 +1,74 @@
+<%= javascript_include_tag 'application/jquery-1.11.1.min','application/croppie', 'application/bootstrap' %>
+<%= stylesheet_link_tag 'application/croppie', 'application/bootstrap-modal' %>
+
+ <div>
+                <%= image_form.text_field  :crop_x, :id => 'imagebase64' %><br />
+            </div>
+
+<script>
+ var file;
+  
+  $("#eventimage").change(function () {
+    $('#myModal').modal('show');
+    $('#imagebase64').val("");
+    file = this;
+  });
+  
+  $('#myModal').on('shown.bs.modal', function (e) {
+    readFile(file);
+  })
+  function readFile(input) {
+      if (input.files && input.files[0]) {
+          var reader = new FileReader();
+
+          reader.onload = function (e) {
+              $('.upload-demo').addClass('ready');
+              $uploadCrop.croppie('bind', {
+                  url: e.target.result
+              }).then(function () {
+                  console.log('jQuery bind complete');
+              });
+
+          }
+
+          reader.readAsDataURL(input.files[0]);
+      } else {
+          swal("Sorry - you're browser doesn't support the FileReader API");
+      }
+  }
+
+  
+</script>
+
+<script>
+
+  $uploadCrop = $('#upload-demo').croppie({
+      viewport: {
+          width: 200,
+          height: 200
+      },
+      boundary: {
+          width: 300,
+          height: 300
+      }
+  });
+  
+  
+</script>
+
+
+
+ if params[:portfolio_image].present? && !params[:portfolio_image][:crop_x].blank?
+        image = Paperclip.io_adapters.for(params[:portfolio_image][:crop_x])
+        image.original_filename = params[:portfolio_image]["uploaded_data"].original_filename
+        params[:portfolio_image]["uploaded_data"] = image
+        @portfolio_image.update_attributes(params[:portfolio_image])
+      else
+        @portfolio_image = PortfolioImage.new(params[:portfolio_image])
+      end
+
+ if !params[:property_image][:crop_x].blank?
+      crop_image = Paperclip.io_adapters.for(params[:property_image][:crop_x])
+      crop_image.original_filename = params[:attachment][:uploaded_data].original_filename
+      params[:attachment][:uploaded_data] = crop_image
+    end

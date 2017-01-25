@@ -1,0 +1,233 @@
+http://jsfiddle.net/w1Lh4w2t/
+
+### Start require lib files of papperclip jcropper
+ :processors => [:jcropper],
+### End require lib files of papperclip jcropper
+
+### jQuery lib files 
+<%= javascript_include_tag 'application/jquery.Jcrop.min', 'application/bootstrap' 'application/jquery-migrate-1.2.1 or jquery 1.11.1'%>
+<%= stylesheet_link_tag 'application/jquery.Jcrop.min', 'application/bootstrap-modal' %>
+
+### Start Upload files and get crop values
+<input type="file" name="file" style="position: absolute; left: 200px;" id="fileUpAddFiles" />
+          <div>
+             <%= hidden_field :image, :crop_x, :id => 'crop_x' %><br />
+             <%= hidden_field :image, :crop_y, :id => 'crop_y' %><br />
+             <%= hidden_field :image, :crop_w, :id => 'crop_w' %><br />
+             <%= hidden_field :image, :crop_h, :id => 'crop_h' %><br />
+           </div>
+
+### End Upload files and get crop values
+
+### Start Cropping area (crop_views) ###
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close close_crop_image" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Crop Image</h4>
+      </div>
+      <div class="modal-body">
+       <div id="crop_views" style='width:100%; height:100%;float:left;'></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="close_crop_image btn btn-default">Close</button>
+        <button type="button" class="btn btn-primary" id="save_crop_image">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>  
+
+### End Cropping area (crop_views) ###
+
+
+### start Script 
+
+<script>
+  var crop_max_width = 400;
+  var crop_max_height = 400;
+  var jcrop_api;
+  var canvas;
+  var context;
+  var image;
+
+  var prefsize;
+   var file;
+  
+  $("#fileUpAddFiles").change(function () {
+    $('#myModal').modal('show');
+    file = this;
+  });
+  
+  $('#myModal').on('shown.bs.modal', function (e) {
+    loadImage(file);
+  })
+
+  function loadImage(input) {
+      if (input.files && input.files[0]) {
+          var reader = new FileReader();
+          canvas = null;
+          reader.onload = function (e) {
+              image = new Image();
+              image.onload = validateImage;
+              image.src = e.target.result;
+          }
+          reader.readAsDataURL(input.files[0]);
+      }
+  }
+
+  function validateImage() {
+      if (canvas != null) {
+          image = new Image();
+          image.onload = restartJcrop;
+          image.src = canvas.toDataURL('image/png');
+      } else
+      restartJcrop();
+  }
+
+  function restartJcrop() {
+      if (jcrop_api != null) {
+          jcrop_api.destroy();
+      }
+      $("#crop_views").empty();
+      $("#crop_views").append("<canvas id=\"canvas\">");
+      canvas = $("#canvas")[0];
+      context = canvas.getContext("2d");
+      canvas.width = image.width;
+      canvas.height = image.height;
+      context.drawImage(image, 0, 0);
+      $("#canvas").Jcrop({
+          onSelect: selectcanvas,
+          onRelease: clearcanvas,
+          boxWidth: crop_max_width,
+          boxHeight: crop_max_height
+      }, function () {
+          jcrop_api = this;
+      });
+      clearcanvas();
+  }
+
+  function clearcanvas() {
+      prefsize = {
+          x: 0,
+          y: 0,
+          w: canvas.width,
+          h: canvas.height,
+      };
+   $('#crop_x').val(prefsize.x);
+   $('#crop_y').val(prefsize.y);
+   $('#crop_w').val(prefsize.w);
+   $('#crop_h').val(prefsize.h);
+      
+  }
+
+  function selectcanvas(coords) {
+      prefsize = {
+          x: Math.round(coords.x),
+          y: Math.round(coords.y),
+          w: Math.round(coords.w),
+          h: Math.round(coords.h)
+      };
+      
+   $('#crop_x').val(prefsize.x);
+   $('#crop_y').val(prefsize.y);
+   $('#crop_w').val(prefsize.w);
+   $('#crop_h').val(prefsize.h);
+  }
+  
+   $("#save_crop_image").click(function () {
+     if(find_file_already_added_in_addFiles())
+     {
+       if(check_image_type_in_property())
+       {
+         document.forms.upload_form6.submit();
+       }
+     }
+  });
+  
+   $("#save_crop_image").click(function () {
+     if(find_file_already_added_in_addFiles())
+     {
+       if(check_image_type_in_property())
+       {
+         document.forms.upload_form6.submit();
+       }
+     }
+  });
+  
+   $(".close_crop_image").click(function () {
+     if (confirm('Are you sure you want to close without saving')) {
+        $('#myModal').modal('hide');
+     } else {
+        return false;
+     }
+  });
+</script>
+
+
+
+### End Script ###
+
+
+### Model level code chage
+
+  controller or moder reprocess image
+
+ ### Cropping image update start
+      @portfolio_image.update_attributes(params[:portfolio_image])
+      @portfolio_image.reprocess_avatar if @portfolio_image.cropping?
+ ### Cropping image update end
+
+ def cropping?
+     !crop_x.blank? && !crop_y.blank? && !crop_w.blank? && !crop_h.blank?
+  end
+    
+  def reprocess_avatar
+    uploaded_data.reprocess!
+  end
+
+  :processors => [:jcropper],
+                    :styles => {
+                                :thumb => "172x83#",
+                                :small  => "42x42>",
+                                :medium => "60x60",
+                                :crop_org => Proc.new { |instance| instance.resize }
+                                } 
+
+ def resize
+    temp = self.uploaded_data.queued_for_write[:original]
+    geo = Paperclip::Geometry.from_file(temp)
+    "#{geo.width.round}x#{geo.height.round}!"
+  end  
+
+
+/home/amp/rails4/theamp2/lib/paperclip_processors
+
+
+# Jcropper paperclip processor
+#
+# This processor very slightly changes the default thumbnail processor in order to work properly with Jcrop
+# the jQuery cropper plugin.
+ 
+module Paperclip
+  # Handles thumbnailing images that are uploaded.
+  class Jcropper < Thumbnail
+    
+    def transformation_command
+      if crop_command
+        crop_command + super.join(' ').sub(/ -crop \S+/, '').split(' ')
+      else
+        super
+      end
+    end
+    
+    def crop_command
+      target = @attachment.instance
+      if target.cropping?
+        ["-crop","#{target.crop_w.to_i}x#{target.crop_h.to_i}+#{target.crop_x.to_i}+#{target.crop_y.to_i}"]
+      end
+    end
+  
+  end
+   
+end
