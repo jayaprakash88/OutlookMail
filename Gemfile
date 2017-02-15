@@ -28,6 +28,7 @@ gem 'faraday'
 gem "paperclip", "~> 5.0.0"
 gem 'pry'
 gem "mysql2", '0.4.2', :platforms=>:ruby
+gem 'link_thumbnailer'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 

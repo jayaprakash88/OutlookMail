@@ -1,8 +1,11 @@
 class ContactsController < ApplicationController
   include AuthHelper
+  require 'link_thumbnailer'
 
   def index
     @contacts = Contact.all
+    object = LinkThumbnailer.generate('http://www.tamilhindu.com')
+    @data = JSON.parse(object.to_json)
   end
 
   def new

@@ -1,6 +1,43 @@
+<style>
+li {
+    list-style: none;
+    width: 100px;
+    height: 100px;
+    float: left;
+    margin-right: 20px;
+    background: #127F6F;
+}
+
+li.loading {
+    animation: pulsate infinite alternate .3s;
+}
+
+img {
+    width: 100%;
+    height: auto;
+    transition: opacity 1s;
+}
+
+li.loading img {
+    opacity: 0;
+}
+
+@keyframes pulsate {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0.8;
+    }
+}
+
+
+</style>
+
 <h1>My contacts</h1>
 <a href='<%=get_login_url%>'>Log in and view my email</a>&nbsp;&nbsp;
-<a href='<%=contacts_new_path%>'>Create Contact</a>
+<a href='<%=contacts_new_path%>'>Create Contact</a>&nbsp;&nbsp;
+<a href='<%=contacts_news_feed_path%>'>News Feed</a>&nbsp;&nbsp;
 <table>
   <tr>
     <th>First Name</th>
@@ -26,4 +63,50 @@
       <td><%= contact.company_address%></td>
     </tr>
   <% end %>
+  <%#= image_tag(@data["images"].first["src"],:alt=>"", :width => @data["images"].first["size"][0], :height => @data["images"].first["size"][1]) %>
 </table>
+
+<ul id="imagesList">
+  
+</ul>
+
+<div id="cssmenu2">
+    <div id="table-title" width="auto">Lab Videos</div>
+    <ul>
+      <li class="playVid" id="vid1"><a href=""><i class="fa fa-fw fa-play"></i> Lab 1 -</a>
+      </li>
+    </ul>
+  </div>
+
+  <div id="right-half">
+
+  </div>
+
+
+<script type="text/javascript">
+  $( document ).ready(function() {
+    <%@data["images"].each do |img|%>
+     var $list = $('#imagesList');
+
+ setTimeout(function() 
+  {
+    var $li = $('<li class="loading">').appendTo($list);
+   
+    $('<img>').appendTo($li).on('load', function() {
+        $li.removeClass('loading');
+    }).attr('src', "<%= img['src']%>");
+  }, 1000);
+    <%end%>
+  });
+
+   play="http://www.w3schools.com/tags/movie.mp4";
+    $('#right-half').html('<video width="320" height="240" src='+play+' type="video/mp4"  > </video>');
+
+
+     $(".playVid a").click(function(e) {
+    e.preventDefault();
+    var play = "samplemp" + $(this).parent()[0].id.slice(3,4)  + ".mp4";
+    play="http://www.w3schools.com/tags/movie.mp4";
+    $('#right-half').html('<video width="320" height="240" src='+play+' type="video/mp4"  > </video>');
+  });
+</script>
