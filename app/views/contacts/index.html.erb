@@ -35,8 +35,12 @@ li.loading img {
 </style>
 
 <h1>My contacts</h1>
+<div>
+
 <a href='<%=get_login_url%>'>Log in and view my email</a>&nbsp;&nbsp;
 <a href='<%=contacts_new_path%>'>Create Contact</a>&nbsp;&nbsp;
+<%= link_to '<i class="fa fa-download"></i>'.html_safe,contacts_excel_sheet_format_path, { title: "Download Template", :"data-container" =>'body', :"data-placement" =>'bottom', :"data-toggle" => 'tooltip' ,:class=>"pull-rightmr20", "data-turbolinks"=>"false"} %>
+</div>
 <table>
   <tr>
     <th>First Name</th>

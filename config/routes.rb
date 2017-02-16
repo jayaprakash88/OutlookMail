@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   get 'contacts/index'
   get 'contacts/new'
+  get 'contacts/excel_sheet_format'
   post 'contacts/create'
   #post 'contacts/outlook_contact_create'
 

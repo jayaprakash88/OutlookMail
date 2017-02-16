@@ -1,10 +1,11 @@
 class ContactsController < ApplicationController
   include AuthHelper
   require 'link_thumbnailer'
+  require 'spreadsheet'
 
   def index
     @contacts = Contact.all
-    object = LinkThumbnailer.generate('http://www.tamilhindu.com')
+    object = LinkThumbnailer.generate('http://tamil.thehindu.com/')
     @data = JSON.parse(object.to_json)
   end
 
@@ -84,6 +85,14 @@ class ContactsController < ApplicationController
       flash[:notice] = "Not able get contacts" 
     end
  end
+
+  def excel_sheet_format
+    file_name = "contacts_template.xlsx"
+    send_file ::Rails.root + "public/#{file_name}", filename: "#{file_name}", :disposition => 'attachment', x_sendfile: true
+    #send_file "/home/amp/Pictures/imgpsh_fullsize.jpeg", :type => 'image/jpeg', :disposition => 'attachment'
+    #send_file '/home/amp/rails4/theamp2/public/contacts_template.xlsx', :type => 'image/jpeg', :disposition => 'inline', x_sendfile: true
+    #send_file ::Rails.root + "public/#{file_name}", filename: "#{file_name}", disposition: 'attachment',x_sendfile: true
+  end
 
   private
 
