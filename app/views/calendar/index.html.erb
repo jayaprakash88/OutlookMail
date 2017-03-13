@@ -1,4 +1,13 @@
 <h1>My events</h1>
+<div>
+
+<a href='<%=get_login_url%>'>Log in and view my email</a>&nbsp;&nbsp;
+<a href='<%=contacts_new_path%>'>Create Contact</a>&nbsp;&nbsp;
+<%= link_to '<i class="fa fa-download"></i>'.html_safe,contacts_excel_sheet_format_path, { title: "Download Template", :"data-container" =>'body', :"data-placement" =>'bottom', :"data-toggle" => 'tooltip' ,:class=>"pull-rightmr20", "data-turbolinks"=>"false"} %>
+<a href='<%=authorizing_outlook_calendar_access_path(:event_name=>"Dynamic Event") %>'>Create Outlook event</a>&nbsp;&nbsp;
+<a href='<%=root_path%>'>Home</a>&nbsp;&nbsp;
+
+</div>
 <table>
   <tr>
     <th>Subject</th>
