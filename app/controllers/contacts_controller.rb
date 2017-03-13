@@ -5,8 +5,8 @@ class ContactsController < ApplicationController
 
   def index
     @contacts = Contact.all
-    object = LinkThumbnailer.generate('http://tamil.thehindu.com/')
-    @data = JSON.parse(object.to_json)
+    #object = LinkThumbnailer.generate('http://tamil.thehindu.com/')
+    @data = JSON.parse(object.to_json) rescue []
   end
 
   def new
@@ -28,7 +28,8 @@ class ContactsController < ApplicationController
   end
 
  def gettoken
-   token = get_token_from_code params[:code]
+
+   token = get_token_from_code params[:code],authorize_url
    session[:azure_token] = token.to_hash
    session[:user_email] = get_user_email token.token
 

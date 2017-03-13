@@ -18,6 +18,8 @@ Rails.application.routes.draw do
   root 'contacts#index'
   ##get 'authorize' => 'contacts#gettoken'
   get 'authorize' => 'contacts#gettoken'  
+  get '/authorizing_outlook_calendar_access', to: 'calendar#authorizing_outlook_access', as: 'authorizing_outlook_calendar_access'
+  get 'calendar_authorize' => 'calendar#calendar_gettoken'
   #get 'authorize' => 'auth#gettoken'
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

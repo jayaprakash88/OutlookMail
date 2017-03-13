@@ -16,8 +16,8 @@ module AuthHelper
   SCOPES = [ 'openid',
            'offline_access',
            'https://outlook.office.com/mail.read',
-           'https://outlook.office.com/contacts.read' ]
-
+           'https://outlook.office.com/contacts.read',
+           'https://outlook.office.com/calendars.readwrite' ]
 
   # Generates the login URL for the app.
   def get_login_url
@@ -31,7 +31,7 @@ module AuthHelper
   end
 
   # Exchanges an authorization code for a token
-  def get_token_from_code(auth_code)
+  def get_token_from_code(auth_code,redirect_url)
 	  client = OAuth2::Client.new(CLIENT_ID,
 	                              CLIENT_SECRET,
 	                              :site => 'https://login.microsoftonline.com',
@@ -39,7 +39,7 @@ module AuthHelper
 	                              :token_url => '/common/oauth2/v2.0/token')
 
 	  token = client.auth_code.get_token(auth_code,
-	                                     :redirect_uri => authorize_url,
+	                                     :redirect_uri => redirect_url,
 	                                     :scope => SCOPES.join(' '))
   end
 
