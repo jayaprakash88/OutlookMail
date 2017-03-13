@@ -1,0 +1,6 @@
+development:
+  google_client_id: 'CLIENT ID'
+  google_client_secret: 'CLIENT SECRET'
+
+
+production:
