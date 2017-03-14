@@ -57,12 +57,13 @@ class CalendarController < ApplicationController
   def create_calendar_event
     token = get_access_token
    # email = session[:user_email]
+   event_date = Time.iso8601(Date.today.strftime("%Y-%m-%d").to_s + "T00:00:00") rescue "2017-03-18T13:00:00.0000000"
      if token
       outlook_client = RubyOutlook::Client.new
       event = {"Subject"=>session[:calendar_event_id],
                #"Body"=> {"ContentType" =>"HTML","Content"=> @event.description},
-               "Start"=>{"DateTime"=>"2017-03-18T13:00:00.0000000", "TimeZone"=>"UTC"},
-               "End"=>{"DateTime"=>"2017-03-18T13:30:00.0000000", "TimeZone"=>"UTC"}
+               "Start"=>{"DateTime"=>event_date, "TimeZone"=>"UTC"},
+               "End"=>{"DateTime"=>event_date, "TimeZone"=>"UTC"}
                #"Location"=> {"DisplayName"=> @event.location}
               }
        response = outlook_client.create_event token, event
@@ -149,11 +150,11 @@ def authorizing_gmail_access
     service = Google::Apis::CalendarV3::CalendarService.new
     service.authorization = client
     
-    date_and_time = '%Y-%m-%d %H:%M:%S %Z'
+    event_date = (Date.today.strftime("%Y-%m-%d").to_s + " " + "00:00:00").to_time.iso8601 rescue Time.now.utc.iso8601
     
     event = Google::Apis::CalendarV3::Event.new({
-        start: Google::Apis::CalendarV3::EventDateTime.new(date_time: Time.now.utc.iso8601),
-      end: Google::Apis::CalendarV3::EventDateTime.new(date_time: Time.now.utc.iso8601),
+        start: Google::Apis::CalendarV3::EventDateTime.new(date_time: event_date),
+      end: Google::Apis::CalendarV3::EventDateTime.new(date_time: event_date),
       summary: session[:calendar_event_id]
       #location: @event.location,
       #description: @event.description
